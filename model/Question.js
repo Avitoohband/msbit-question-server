@@ -7,17 +7,19 @@ const questionSchema = new mongoose.Schema(
       required: true,
     },
     answers: {
-      type: [{
-        answer: String, 
-        numberOfVotes: Number
-      }],
+      type: [
+        {
+          answer: String,
+          numberOfVotes: Number,
+        },
+      ],
       required: true,
     },
-    correctAnswer: { type: Number , default: -1},
+    correctAnswer: { type: Number },
   },
   { timestamp: true }
 );
 
-const Question = mongoose.model('Question', questionSchema);
+const Question = mongoose.model("Question", questionSchema);
 
 export default Question;

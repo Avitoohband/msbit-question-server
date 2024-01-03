@@ -34,7 +34,7 @@ export const getQuestions = async (req, res) => {
 export const createQuestion = async (req, res) => {
   try {
     const { question, answers } = req.body;
-    const correctAnswerReq = req.body.correctAnswer;
+    const correctAnswerReq = parseInt(req.body.correctAnswer);
 
     let newAnswers = answers.slice();
 
@@ -46,20 +46,15 @@ export const createQuestion = async (req, res) => {
     const newQuestion = new Question({
       question,
       answers: newAnswers,
+      correctAnswer: correctAnswerReq ? correctAnswerReq : -1,
     });
 
-    if (correctAnswerReq) {
-      newQuestion = {
-        ...newQuestion,
-        correctAnswer: correctAnswerReq,
-      };
-    } 
 
     await newQuestion.save();
 
-    res.status(201).json({ questionId: question._id });
+    res.status(201).json({ questionId: question._id, status: true });
   } catch (err) {
-    res.status(400).json({ msg: err.message });
+    res.status(400).json({ msg: err.message, status: false });
   }
 };
 
