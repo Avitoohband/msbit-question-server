@@ -49,10 +49,9 @@ export const createQuestion = async (req, res) => {
       correctAnswer: correctAnswerReq ? correctAnswerReq : -1,
     });
 
-
     await newQuestion.save();
 
-    res.status(201).json({ questionId: question._id, status: true });
+    res.status(201).json({ questionId: newQuestion._id, status: true });
   } catch (err) {
     res.status(400).json({ msg: err.message, status: false });
   }
@@ -61,15 +60,17 @@ export const createQuestion = async (req, res) => {
 export const voteAnswer = async (req, res) => {
   try {
     const { questionId, answerNum } = req.params;
+    console.log(answerNum);
 
     const question = await Question.findById(questionId);
 
     if (question) {
-      if (question.correctAnswer === answerNum) {
-        res.send(true);
-        return;
-      }
-      res.send(false);
+      console.log(question.answers.at(answerNum).numberOfVotes);
+      question.answers.at(answerNum).numberOfVotes++;
+      question.save();
+      res
+        .status(200)
+        .json({ numOfVotes: question.answers.at(answerNum).numberOfVotes });
       return;
     }
 
